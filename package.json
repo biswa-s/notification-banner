@@ -1,8 +1,11 @@
 {
   "name": "notification-banner",
+  "author": "biswa ranjan sethi",
   "description": "a customization notification banner in Polymer 3.0",
   "main": "notification-banner.js",
   "dependencies": {
+    "@polymer/paper-button": "^3.0.1",
+    "@polymer/paper-dialog": "^3.0.1",
     "@polymer/polymer": "^3.0.0"
   },
   "devDependencies": {
