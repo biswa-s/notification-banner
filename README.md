@@ -1,6 +1,6 @@
 # \<notification-banner\>
 
-a customization notification banner in Polymer 3.0
+a customized notification banner in Polymer 3.0
 
 ## Install the Polymer-CLI
 
