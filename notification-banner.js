@@ -1,5 +1,8 @@
 import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
+import {IronA11yAnnouncer} from '@polymer/iron-a11y-announcer/iron-a11y-announcer.js';
 import '@polymer/paper-dialog/paper-dialog.js';
+import '@polymer/iron-icon/iron-icon.js';
+import '@polymer/iron-icons/iron-icons.js';
 /**
  * `notification-banner`
  * a customization notification banner in Polymer 3.0
@@ -19,10 +22,17 @@ class NotificationBanner extends PolymerElement {
         paper-dialog {
           width: 100%;
           height: var(--notification-banner-height, 76px);
-          position: relative;
+          position: absolute;
           border-radius: 5px;
-          padding-top: 25px;
-          padding-left: 40%;
+          left: 0;
+          top:0;
+          margin:0;
+          @apply --mixin-dialog;
+        }
+        .container {
+          margin: 24px auto;
+          text-align: var(--notification-banner-container-text-align, center);
+          @apply --mixin-container;
         }
 
         paper-dialog.success {
@@ -37,15 +47,27 @@ class NotificationBanner extends PolymerElement {
           color: var(--notification-banner-color, #f50808);
         }
 
-        paper-dialog.warning {
-          border: 1px solid #4caf50;
-          background-color: var(--notification-banner-bg-color, #f1f8e9);
-          color: var(--notification-banner-color, #4caf50);
+        paper-dialog.custom {
+          border: 1px solid var(--notification-banner-border-color, #607d8b);
+          background-color: var(--notification-banner-bg-color, #ede1e1);
+          color: var(--notification-banner-color, #37b6f3b);
         }
 
+        .close {
+          display: inline-block;
+          position: absolute;
+          top: 0;
+          right: 0;
+          margin: 0;
+          padding: 0;
+          @apply --close-icon
+        }
       </style>
-      <paper-dialog opened class$="[[className]]" modal>
-        [[text]]
+      <paper-dialog id="dialog" class$="[[className]]" modal>
+        <div class="container">
+          <iron-icon icon="report-problem"></iron-icon> [[text]]
+        </div>
+        <iron-icon class="close" icon="close" on-tap="hide"></iron-icon>
       </paper-dialog>
     `;
   }
@@ -58,7 +80,7 @@ class NotificationBanner extends PolymerElement {
     return {
       version: {
         type: String,
-        value: ""
+        value: ''
       },
       isVisible: {
         type: Boolean,
@@ -67,22 +89,54 @@ class NotificationBanner extends PolymerElement {
       },
       text: {
         type: String,
-        value: ""
+        value: ''
       },
       type: {
         type: String,
-        value: "",
-        observer: '_computeClass'
+        value: '',
+        observer: '_computeClassObserver'
+      },
+      genericEvent: {
+        type: Object,
+        value: { bubbles: true, composed: true }
       }
     };
   }
 
-  _computeClass(newVal) {
+  _computeClassObserver(newVal) {
     if(newVal === 'success') {
       this.className= "success";
+      return;
     }
     if(newVal === 'error') {
       this.className= "error";
+      return;
+    } else {
+      this.className = "custom";
+      return;
+    }
+  }
+
+  ready() {
+    super.ready();
+    IronA11yAnnouncer.requestAvailability();
+  }
+
+  show() {
+    if (!this.isVisible) {
+      this.$.dialog.opened = true;
+      this.isVisible = true;
+      IronA11yAnnouncer.instance.fire('iron-announce',
+      {text: this.text}, this.genericEvent);
+    }
+  }
+
+  hide() {
+    if (this.isVisible) {
+      this.$.dialog.opened = false;
+      this.isVisible = false;
+      this.dispatchEvent(new CustomEvent('notification-banner-hide',
+      this.genericEvent));
     }
   }
 }

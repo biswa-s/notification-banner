@@ -11,12 +11,31 @@
     <script type="module">
       import '@polymer/iron-demo-helpers/demo-pages-shared-styles';
       import '@polymer/iron-demo-helpers/demo-snippet';
+      import '@polymer/paper-button/paper-button';
     </script>
 
     <script type="module" src="../notification-banner.js"></script>
 
     <custom-style>
       <style is="custom-style" include="demo-pages-shared-styles">
+      </style>
+      <style>
+      paper-button.indigo {
+          background-color: var(--paper-indigo-500);
+          color: white;
+          --paper-button-raised-keyboard-focus: {
+            background-color: var(--paper-pink-a200) !important;
+            color: white !important;
+          };
+      }
+    paper-button.red {
+        background-color: var(--google-red-700);
+        color: white;
+        --paper-button-raised-keyboard-focus: {
+          background-color: var(--paper-pink-a200) !important;
+          color: white !important;
+        };   
+    }
       </style>
     </custom-style>
   </head>
@@ -25,11 +44,29 @@
       <h3>Basic notification-banner demo</h3>
       <demo-snippet>
         <template>
-          <!-- <notification-banner></notification-banner> -->
+          <notification-banner id="demoId"></notification-banner>
         </template>
       </demo-snippet>
     </div>
-    <notification-banner text="Action completed successfully!!!" type="error"></notification-banner>
-    <notification-banner text="Action completed successfully!!!" type="success"></notification-banner>
+    <notification-banner id="notificationBanner"></notification-banner>
+    <paper-button raised class="custom indigo" onClick="showSuccessBanner()">Success Banner</paper-button>
+    <paper-button raised class="custom red" onClick="showErrorBanner()">Error Banner</paper-button>
+    <script>
+      function showSuccessBanner() {
+        let successBanner = document.getElementById('notificationBanner');
+        successBanner.type = "success";
+        successBanner.isSuccess = true;
+        successBanner.text = "success message";
+        successBanner.show();
+      }
+
+      function showErrorBanner() {
+        let errorBanner = document.getElementById('notificationBanner');
+        errorBanner.type = "custome";
+        errorBanner.isSuccess = false;
+        errorBanner.text = "error message";
+        errorBanner.show();
+      }
+    </script>
   </body>
 </html>
