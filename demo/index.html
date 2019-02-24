@@ -7,6 +7,7 @@
     <title>notification-banner demo</title>
 
     <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script src="../node_modules/web-animations-js/web-animations-next-lite.min.js"></script>
 
     <script type="module">
       import '@polymer/iron-demo-helpers/demo-pages-shared-styles';
@@ -51,22 +52,42 @@
     <notification-banner id="notificationBanner"></notification-banner>
     <paper-button raised class="custom indigo" onClick="showSuccessBanner()">Success Banner</paper-button>
     <paper-button raised class="custom red" onClick="showErrorBanner()">Error Banner</paper-button>
+    <paper-button raised class="custom red" onClick="showInfoBanner()">Info Banner</paper-button>
+    <paper-button raised class="custom red" onClick="showWarningBanner()">Warning Banner</paper-button>
+    <paper-button raised class="custom indigo" onClick="showToast()">Toast</paper-button>
     <script>
+      const banner = document.getElementById('notificationBanner');
+      
       function showSuccessBanner() {
-        let successBanner = document.getElementById('notificationBanner');
-        successBanner.type = "success";
-        successBanner.isSuccess = true;
-        successBanner.text = "success message";
-        successBanner.show();
+        banner.type = "success";
+        banner.text = "success message";
+        banner.opened = true;
       }
 
       function showErrorBanner() {
-        let errorBanner = document.getElementById('notificationBanner');
-        errorBanner.type = "custome";
-        errorBanner.isSuccess = false;
-        errorBanner.text = "error message";
-        errorBanner.show();
+        banner.type = "error";
+        banner.text = "error message";
+        banner.opened = true;
       }
+
+      function showInfoBanner() {
+        banner.type = "info";
+        banner.text = "info message";
+        banner.opened = true;
+      }
+      
+      function showWarningBanner() {
+        banner.type = "warning";
+        banner.text = "warning message";
+        banner.opened = true;
+      }
+      
+      function showToast() {
+        banner.toastPosition="top-left";
+        banner.text = "toast message";
+        banner.toast = true;
+      }
+
     </script>
   </body>
 </html>

@@ -3,15 +3,16 @@
   "author": "biswa ranjan sethi",
   "description": "a customization notification banner in Polymer 3.0",
   "main": "notification-banner.js",
-  "scripts":{
-    "serve" : "polymer serve"
+  "scripts": {
+    "serve": "polymer serve"
   },
   "dependencies": {
     "@polymer/iron-a11y-announcer": "^3.0.2",
     "@polymer/iron-icons": "^3.0.1",
     "@polymer/paper-button": "^3.0.1",
     "@polymer/paper-dialog": "^3.0.1",
-    "@polymer/polymer": "^3.0.0"
+    "@polymer/polymer": "^3.0.0",
+    "web-animations-js": "^2.3.1"
   },
   "devDependencies": {
     "@polymer/iron-demo-helpers": "^3.0.0-pre.19",

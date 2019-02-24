@@ -1,8 +1,10 @@
 import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
+import '@polymer/neon-animation/neon-animations.js';
 import {IronA11yAnnouncer} from '@polymer/iron-a11y-announcer/iron-a11y-announcer.js';
 import '@polymer/paper-dialog/paper-dialog.js';
 import '@polymer/iron-icon/iron-icon.js';
 import '@polymer/iron-icons/iron-icons.js';
+import './notification-banner-styles.js';
 /**
  * `notification-banner`
  * a customization notification banner in Polymer 3.0
@@ -14,60 +16,26 @@ import '@polymer/iron-icons/iron-icons.js';
 class NotificationBanner extends PolymerElement {
   static get template() {
     return html`
-      <style>
-        :host {
-          display: block;
-          box-sizing: border-box;
-        }
-        paper-dialog {
-          width: 100%;
-          height: var(--notification-banner-height, 76px);
-          position: absolute;
-          border-radius: 5px;
-          left: 0;
-          top:0;
-          margin:0;
-          @apply --mixin-dialog;
-        }
-        .container {
-          margin: 24px auto;
-          text-align: var(--notification-banner-container-text-align, center);
-          @apply --mixin-container;
-        }
-
-        paper-dialog.success {
-          border: 1px solid #4caf50;
-          background-color: var(--notification-banner-bg-color, #f1f8e9);
-          color: var(--notification-banner-color, #4caf50);
-        }
-
-        paper-dialog.error {
-          border: 1px solid #f50808;
-          background-color: var(--notification-banner-bg-color, #f7d7d7);
-          color: var(--notification-banner-color, #f50808);
-        }
-
-        paper-dialog.custom {
-          border: 1px solid var(--notification-banner-border-color, #607d8b);
-          background-color: var(--notification-banner-bg-color, #ede1e1);
-          color: var(--notification-banner-color, #37b6f3b);
-        }
-
-        .close {
-          display: inline-block;
-          position: absolute;
-          top: 0;
-          right: 0;
-          margin: 0;
-          padding: 0;
-          @apply --close-icon
-        }
-      </style>
-      <paper-dialog id="dialog" class$="[[className]]" modal>
+      <style include="notification-banner-styles"></style>
+      <paper-dialog id="dialog" class$="[[className]]" 
+        entry-animation="scale-up-animation"
+        exit-animation="scale-down-animation" 
+        modal>
         <div class="container">
-          <iron-icon icon="report-problem"></iron-icon> [[text]]
+          <iron-icon icon="[[iconType]]"></iron-icon>
+          <slot></slot>
+          [[text]]
         </div>
         <iron-icon class="close" icon="close" on-tap="hide"></iron-icon>
+      </paper-dialog>
+
+      <paper-dialog id="toast" class="toast" class$="[[toastPosition]]"
+        entry-animation="scale-up-animation"
+        exit-animation="scale-down-animation">
+        <div class="container">
+          <slot></slot>
+          [[text]]
+        </div>
       </paper-dialog>
     `;
   }
@@ -91,10 +59,29 @@ class NotificationBanner extends PolymerElement {
         type: String,
         value: ''
       },
+      iconType: String,
       type: {
         type: String,
         value: '',
-        observer: '_computeClassObserver'
+        observer: '_typeChanged'
+      },
+      opened: {
+        type: Boolean,
+        value: false,
+        observer: '_openedChanged'
+      },
+      toast: {
+        type: Boolean,
+        value: false,
+        observer: '_toastChanged'
+      },
+      toastPosition: {
+        type: String,
+        value: ''
+      },
+      toastTimeout: {
+        type: Number,
+        value: 5000
       },
       genericEvent: {
         type: Object,
@@ -103,17 +90,31 @@ class NotificationBanner extends PolymerElement {
     };
   }
 
-  _computeClassObserver(newVal) {
-    if(newVal === 'success') {
-      this.className= "success";
-      return;
-    }
-    if(newVal === 'error') {
-      this.className= "error";
-      return;
-    } else {
-      this.className = "custom";
-      return;
+  _typeChanged(newVal) {
+    switch(newVal) {
+      case 'success':
+        this.className= 'success';
+        this.iconType= 'check';
+      break;
+
+      case 'info':
+        this.className= 'info';
+        this.iconType= 'info';
+      break;
+
+      case 'warning':
+        this.className= 'warning';
+        this.iconType= 'warning';
+      break;
+
+      case 'error':
+        this.className= 'error';
+        this.iconType= 'error';
+      break;
+
+      case 'custom':
+        this.className= 'custom';
+      break;
     }
   }
 
@@ -122,8 +123,18 @@ class NotificationBanner extends PolymerElement {
     IronA11yAnnouncer.requestAvailability();
   }
 
-  show() {
-    if (!this.isVisible) {
+  hide() {
+    if (this.isVisible) {
+      this.opened = false;
+      this.$.dialog.opened = false;
+      this.isVisible = false;
+      this.dispatchEvent(new CustomEvent('banner-closed',
+      this.genericEvent));
+    }
+  }
+
+  _openedChanged(newVal) {
+    if(newVal) {
       this.$.dialog.opened = true;
       this.isVisible = true;
       IronA11yAnnouncer.instance.fire('iron-announce',
@@ -131,12 +142,18 @@ class NotificationBanner extends PolymerElement {
     }
   }
 
-  hide() {
-    if (this.isVisible) {
-      this.$.dialog.opened = false;
-      this.isVisible = false;
-      this.dispatchEvent(new CustomEvent('notification-banner-hide',
-      this.genericEvent));
+  _toastChanged(newVal) {
+    if(newVal) {
+      this.$.toast.opened = true;
+      IronA11yAnnouncer.instance.fire('iron-announce',
+      {text: this.text}, this.genericEvent);
+   
+      setTimeout(()=> {
+        this.toast = false;
+        this.$.toast.opened = false;
+        this.dispatchEvent(new CustomEvent('toast-closed',
+        this.genericEvent));
+      }, thi.stoastTimeout);
     }
   }
 }
