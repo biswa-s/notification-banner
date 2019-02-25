@@ -48,17 +48,20 @@ class NotificationBanner extends PolymerElement {
     return {
       version: {
         type: String,
-        value: ''
+        value: '1.0.0'
       },
+      //related to toast type notification
       isVisible: {
         type: Boolean,
         readonly: true,
         value: false
       },
+      //related to toast type notification
       text: {
         type: String,
         value: ''
       },
+      //related to toast type notification
       iconType: String,
       type: {
         type: String,
@@ -70,15 +73,18 @@ class NotificationBanner extends PolymerElement {
         value: false,
         observer: '_openedChanged'
       },
+      //related to toast type notification
       toast: {
         type: Boolean,
         value: false,
         observer: '_toastChanged'
       },
+      //related to toast type notification
       toastPosition: {
         type: String,
         value: ''
       },
+      //related to toast type notification
       toastTimeout: {
         type: Number,
         value: 5000
@@ -153,7 +159,7 @@ class NotificationBanner extends PolymerElement {
         this.$.toast.opened = false;
         this.dispatchEvent(new CustomEvent('toast-closed',
         this.genericEvent));
-      }, thi.stoastTimeout);
+      }, this.toastTimeout);
     }
   }
 }
