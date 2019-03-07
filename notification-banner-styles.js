@@ -70,9 +70,9 @@ const template = html`
         }
 
         .toast {
-            background: #363636;
+            background: var(--notification-banner-toast-bg-color, #363636);
             border-radius: 5px;
-            color: #ffffff;
+            color: var(--notification-banner-toast-color, #ffffff);
         }
 
         .top-left {
@@ -102,17 +102,16 @@ const template = html`
             right: 0;
             margin: 0;
             padding: 0;
-            @apply --close-icon
+            @apply --mixin-close-icon;
         }
+
 
         @media screen and (min-width: 992px) {
             .close {
-            cursor: pointer;
+                cursor: pointer;
             }
         }
 
-        @media screen and (max-width: 767px) {
-        }
       </style>
     </custom-style>
   </template>

@@ -21,20 +21,23 @@
       <style is="custom-style" include="demo-pages-shared-styles">
       </style>
       <style>
+      .custom {
+        margin: 10px;
+      }
       paper-button.indigo {
           background-color: var(--paper-indigo-500);
-          color: white;
+          color: #ffffff;
           --paper-button-raised-keyboard-focus: {
             background-color: var(--paper-pink-a200) !important;
-            color: white !important;
+            color: #ffffff !important;
           };
       }
     paper-button.red {
         background-color: var(--google-red-700);
-        color: white;
+        color: #ffffff;
         --paper-button-raised-keyboard-focus: {
           background-color: var(--paper-pink-a200) !important;
-          color: white !important;
+          color: #ffffff !important;
         };   
     }
       </style>
@@ -42,7 +45,7 @@
   </head>
   <body>
     <div class="vertical-section-container centered">
-      <h3>Basic notification-banner demo</h3>
+      <h3>A Polymer 3.0 based Notification and Toast Component Demo</h3>
       <demo-snippet>
         <template>
           <notification-banner id="demoId"></notification-banner>

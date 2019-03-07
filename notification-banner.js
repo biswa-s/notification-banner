@@ -29,14 +29,17 @@ class NotificationBanner extends PolymerElement {
         <iron-icon class="close" icon="close" on-tap="hide"></iron-icon>
       </paper-dialog>
 
-      <paper-dialog id="toast" class="toast" class$="[[toastPosition]]"
+      <div class="toast-container">
+        <paper-dialog id="toast" class="toast" class$="[[toastPosition]]"
         entry-animation="scale-up-animation"
         exit-animation="scale-down-animation">
         <div class="container">
           <slot></slot>
           [[text]]
         </div>
-      </paper-dialog>
+    </paper-dialog>
+      </div>
+      
     `;
   }
 
